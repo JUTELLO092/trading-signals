@@ -1,11 +1,14 @@
+import type { NextApiRequest, NextApiResponse } from 'next';
 import { calcRSI, calcMACD, generateSignal } from '../../lib/indicators';
 import { fetchHistoricalData, SYMBOLS } from '../../lib/marketData';
+import type { SignalData } from '../../types';
 
 const TOP_SYMBOLS = ['BTC-USD', 'ETH-USD', 'SOL-USD', '^GSPC'];
 
-export default async function handler(req, res) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const results = [];
+    const results: SignalData[] = [];
+
     for (const symbol of TOP_SYMBOLS) {
       const data = await fetchHistoricalData(symbol, '1mo', '1d');
       if (data.length < 20) continue;
@@ -23,13 +26,14 @@ export default async function handler(req, res) {
         rsi: rsi.length > 0 ? parseFloat(rsi[rsi.length - 1].value.toFixed(1)) : null,
         signal: signal.signal,
         confidence: signal.confidence,
-        reason: signal.reason
+        reason: signal.reason,
       });
     }
 
     res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate');
     res.status(200).json({ signals: results, updatedAt: new Date().toISOString() });
   } catch (e) {
-    res.status(500).json({ error: e.message });
+    const msg = e instanceof Error ? e.message : 'Error desconocido';
+    res.status(500).json({ error: msg });
   }
 }

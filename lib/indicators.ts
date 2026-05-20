@@ -1,6 +1,8 @@
-// Calculo de SMA (Simple Moving Average)
-export function calcSMA(data, period) {
-  const result = [];
+import type { IndicatorValue, MACDResult, BollingerBand, SignalResponse } from '../types';
+
+// Simple Moving Average
+export function calcSMA(data: number[], period: number): IndicatorValue[] {
+  const result: IndicatorValue[] = [];
   for (let i = period - 1; i < data.length; i++) {
     const sum = data.slice(i - period + 1, i + 1).reduce((a, b) => a + b, 0);
     result.push({ value: sum / period, index: i });
@@ -8,10 +10,10 @@ export function calcSMA(data, period) {
   return result;
 }
 
-// Calculo de EMA (Exponential Moving Average)
-export function calcEMA(data, period) {
+// Exponential Moving Average
+export function calcEMA(data: number[], period: number): IndicatorValue[] {
   const multiplier = 2 / (period + 1);
-  const result = [{ value: data.slice(0, period).reduce((a, b) => a + b, 0) / period, index: period - 1 }];
+  const result: IndicatorValue[] = [{ value: data.slice(0, period).reduce((a, b) => a + b, 0) / period, index: period - 1 }];
   for (let i = period; i < data.length; i++) {
     const ema = (data[i] - result[result.length - 1].value) * multiplier + result[result.length - 1].value;
     result.push({ value: ema, index: i });
@@ -20,15 +22,15 @@ export function calcEMA(data, period) {
 }
 
 // RSI (Relative Strength Index)
-export function calcRSI(data, period = 14) {
+export function calcRSI(data: number[], period = 14): IndicatorValue[] {
   if (data.length < period + 1) return [];
-  const gains = [], losses = [];
+  const gains: number[] = [], losses: number[] = [];
   for (let i = 1; i < data.length; i++) {
     const diff = data[i] - data[i - 1];
     gains.push(diff > 0 ? diff : 0);
     losses.push(diff < 0 ? -diff : 0);
   }
-  const result = [];
+  const result: IndicatorValue[] = [];
   let avgGain = gains.slice(0, period).reduce((a, b) => a + b, 0) / period;
   let avgLoss = losses.slice(0, period).reduce((a, b) => a + b, 0) / period;
   result.push({ value: 100 - (100 / (1 + avgGain / (avgLoss || 0.001))), index: period });
@@ -41,11 +43,10 @@ export function calcRSI(data, period = 14) {
 }
 
 // MACD
-export function calcMACD(data) {
+export function calcMACD(data: number[]): MACDResult {
   const ema12 = calcEMA(data, 12);
   const ema26 = calcEMA(data, 26);
-  const macdLine = [];
-  const start = Math.max(ema12[0]?.index || 0, ema26[0]?.index || 0);
+  const macdLine: IndicatorValue[] = [];
   for (let i = 0; i < ema12.length; i++) {
     const e26 = ema26.find(e => e.index === ema12[i].index);
     if (e26) macdLine.push({ value: ema12[i].value - e26.value, index: ema12[i].index });
@@ -55,7 +56,7 @@ export function calcMACD(data) {
 }
 
 // Bollinger Bands
-export function calcBollinger(data, period = 20) {
+export function calcBollinger(data: number[], period = 20): BollingerBand[] {
   const sma = calcSMA(data, period);
   return sma.map(s => {
     const slice = data.slice(s.index - period + 1, s.index + 1);
@@ -66,7 +67,7 @@ export function calcBollinger(data, period = 20) {
 }
 
 // Generar senal basada en RSI + MACD
-export function generateSignal(rsi, macd) {
+export function generateSignal(rsi: IndicatorValue[], macd: IndicatorValue[]): SignalResponse {
   if (!rsi || rsi.length === 0) return { signal: "NEUTRAL", confidence: 0, reason: "Sin datos suficientes" };
 
   const lastRSI = rsi[rsi.length - 1].value;
@@ -75,7 +76,6 @@ export function generateSignal(rsi, macd) {
   const macdCrossover = prevMACD < 0 && lastMACD >= 0;
   const macdCrossunder = prevMACD > 0 && lastMACD <= 0;
 
-  // Logica de decision
   if (lastRSI < 35 && macdCrossover) {
     return { signal: "COMPRA", confidence: Math.min(Math.round((35 - lastRSI) * 3 + 50), 95), reason: `RSI en ${lastRSI.toFixed(1)} (sobreventa) + MACD alcista` };
   }

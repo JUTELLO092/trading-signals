@@ -2,36 +2,263 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ================================================
+   IRIEL DESIGN SYSTEM — Paleta Premium
+   ================================================ */
+
 :root {
-  --bg: #0a0a0f;
-  --card: #12121a;
-  --border: #1e1e2a;
-  --accent: #00d4ff;
+  /* Core backgrounds */
+  --bg-primary: #08080f;
+  --bg-secondary: #0d0d1a;
+  --bg-card: #12121f;
+  --bg-card-hover: #181830;
+  --bg-elevated: #1a1a2e;
+
+  /* Borders */
+  --border-default: #1e1e32;
+  --border-subtle: #18182a;
+  --border-accent: #2a2a4a;
+
+  /* Brand palette — Purple/Cyan/Gold */
+  --brand-purple: #7c3aed;
+  --brand-purple-dim: #5b21b6;
+  --brand-purple-glow: rgba(124, 58, 237, 0.3);
+  --brand-cyan: #00d4ff;
+  --brand-cyan-dim: #0099cc;
+  --brand-cyan-glow: rgba(0, 212, 255, 0.3);
+  --brand-gold: #f59e0b;
+  --brand-gold-dim: #d97706;
+  --brand-gold-glow: rgba(245, 158, 11, 0.3);
+
+  /* Signal colors */
   --success: #22c55e;
+  --success-dim: #16a34a;
+  --success-glow: rgba(34, 197, 94, 0.25);
   --danger: #ef4444;
+  --danger-dim: #dc2626;
+  --danger-glow: rgba(239, 68, 68, 0.25);
   --warning: #f59e0b;
-  --text: #e2e2e2;
+  --warning-dim: #d97706;
+
+  /* Text */
+  --text-primary: #e8e8f0;
+  --text-secondary: #a0a0b8;
   --text-dim: #6b7280;
+  --text-inverse: #08080f;
+
+  /* Accent utility */
+  --accent: var(--brand-cyan);
+  --bg: var(--bg-primary);
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.6);
+  --shadow-glow-purple: 0 0 20px rgba(124, 58, 237, 0.15);
+  --shadow-glow-cyan: 0 0 20px rgba(0, 212, 255, 0.15);
+
+  /* Radii */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 400ms ease;
+
+  /* Sidebar */
+  --sidebar-width: 240px;
+  --sidebar-collapsed: 64px;
+  --header-height: 60px;
+}
+
+/* ================================================
+   Base
+   ================================================ */
+
+* {
+  box-sizing: border-box;
 }
 
 body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
+
+/* ================================================
+   Scrollbar
+   ================================================ */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-accent);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--brand-purple-dim);
+}
+
+/* ================================================
+   Typography
+   ================================================ */
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.mono {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+/* ================================================
+   Card base
+   ================================================ */
 
 .card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  transition: all var(--transition-base);
 }
 
-.glow-accent {
-  box-shadow: 0 0 20px rgba(0, 212, 255, 0.1);
+.card:hover {
+  border-color: var(--border-accent);
+  box-shadow: var(--shadow-sm);
 }
 
+.card-glow {
+  box-shadow: var(--shadow-glow-cyan);
+}
+
+.card-glow-purple {
+  box-shadow: var(--shadow-glow-purple);
+}
+
+.card-interactive {
+  cursor: pointer;
+}
+.card-interactive:hover {
+  background: var(--bg-card-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+/* ================================================
+   Glass effect
+   ================================================ */
+
+.glass {
+  background: rgba(18, 18, 31, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* ================================================
+   Animations
+   ================================================ */
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-16px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(16px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 8px rgba(0, 212, 255, 0.1); }
+  50%      { box-shadow: 0 0 20px rgba(0, 212, 255, 0.25); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease forwards;
+}
+
+.animate-slide-left {
+  animation: slideInLeft 0.4s ease forwards;
+}
+
+.animate-slide-right {
+  animation: slideInRight 0.4s ease forwards;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+/* Staggered children */
+.stagger > * {
+  opacity: 0;
+  animation: fadeIn 0.4s ease forwards;
+}
+.stagger > *:nth-child(1) { animation-delay: 0.05s; }
+.stagger > *:nth-child(2) { animation-delay: 0.1s; }
+.stagger > *:nth-child(3) { animation-delay: 0.15s; }
+.stagger > *:nth-child(4) { animation-delay: 0.2s; }
+.stagger > *:nth-child(5) { animation-delay: 0.25s; }
+.stagger > *:nth-child(6) { animation-delay: 0.3s; }
+.stagger > *:nth-child(7) { animation-delay: 0.35s; }
+.stagger > *:nth-child(8) { animation-delay: 0.4s; }
+
+/* Skeleton loading */
+.skeleton {
+  background: linear-gradient(90deg,
+    var(--bg-card) 25%,
+    var(--bg-card-hover) 50%,
+    var(--bg-card) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: var(--radius-sm);
+}
+
+/* Signal badges */
 .signal-buy { color: var(--success); }
 .signal-sell { color: var(--danger); }
 .signal-hold { color: var(--warning); }
+.signal-buy-bg { background: rgba(34, 197, 94, 0.12); border: 1px solid rgba(34, 197, 94, 0.3); }
+.signal-sell-bg { background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3); }
+.signal-hold-bg { background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.3); }
+
+/* === RESPONSIVE === */
+
+@media (max-width: 768px) {
+  :root {
+    --sidebar-width: 0px;
+    --sidebar-collapsed: 0px;
+  }
+  .card {
+    padding: 16px;
+    border-radius: var(--radius-md);
+  }
+}
